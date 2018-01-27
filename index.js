@@ -10,8 +10,20 @@ class SEOChecker {
     this.maxStrongTags = options.maxStrongTags || 15;
     this.rules = options.rules || [];
 
+    this.inputType = this.detectInputType();
     this.outputType = this.detectOutputType();
     this.outputFile = undefined;
+  }
+
+  detectInputType() {
+    if (
+      typeof this.input === 'string' &&
+      (this.input.endsWith('html') || this.input.endsWith('htm'))
+    ) {
+      return 'htmlfile';
+    } else {
+      return 'stream';
+    }
   }
 
   detectOutputType() {
@@ -25,7 +37,6 @@ class SEOChecker {
         },
         (err) => {}
       );
-
       return 'file';
     } else {
       return 'stream';
@@ -78,7 +89,7 @@ class SEOChecker {
         this.writeFile(text);
         break;
       case 'stream':
-        console.log('TODO: other output method');
+        this.output.write(text + '\r\n');
         break;
       default:
         break;
@@ -96,25 +107,34 @@ class SEOChecker {
     if (this.outputFile !== undefined) {
       this.outputFile.end();
     }
+    if (this.outputType === 'stream') {
+      this.output.end();
+    }
   }
 
   check() {
-    let newPromise = new Promise((resolve, reject) => {
-      fs.readFile(this.input, (err, data) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(data);
+    if (this.inputType === 'htmlfile') {
+      let newPromise = new Promise((resolve, reject) => {
+        fs.readFile(this.input, (err, data) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(data);
+        });
       });
-    });
 
-    newPromise
-      .then((data) => {
-        this.doCheck(data.toString());
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+      newPromise
+        .then((data) => {
+          this.doCheck(data.toString());
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else {
+      // input is stream
+      let data = this.input.read().toString();
+      this.doCheck(data.toString());
+    }
   }
 
   static imgShouldContainAltAttr() {
