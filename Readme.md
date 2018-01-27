@@ -9,7 +9,7 @@ node example.js
 ```
 var checker = new SEOChecker({
   // html file
-  input: '/Users/soar/Sites/seocheck/index.html',
+  input: 'path/to/htmlfile',
   // can be a file, console
   output: 'console',
   maxStrongTags: 15,
@@ -19,7 +19,10 @@ var checker = new SEOChecker({
     SEOChecker.bodySholdNotContainMoreThanOneH1,
     SEOChecker.headShouldContainMetaAndTitle,
     SEOChecker.bodySholdNotContainTooMoreStrong,
-    function() // user define check rule
+    // user define check rule
+    function() {
+      // use "this.raw" as input data to check
+    }
   ]
 });
 

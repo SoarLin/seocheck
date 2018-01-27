@@ -45,7 +45,7 @@ class SEOChecker {
       fs.unlink(filepath, (err) => {
         if (err) {
           // no such file
-          console.log(err);
+          // console.log(err);
         }
         resolve();
       });
@@ -87,8 +87,9 @@ class SEOChecker {
 
   doCheck(raw) {
     let result = '';
+    this.raw = raw;
     for (let i = 0, max = this.rules.length; i < max; i++) {
-      result = this.rules[i].bind(this)(raw);
+      result = this.rules[i].bind(this)();
       this.printOutput(result);
     }
 
@@ -116,7 +117,7 @@ class SEOChecker {
       });
   }
 
-  static imgShouldContainAltAttr(raw) {
+  static imgShouldContainAltAttr() {
     let count = 0;
     let parser = new htmlparser.Parser(
       {
@@ -131,13 +132,13 @@ class SEOChecker {
       },
       { decodeEntities: true }
     );
-    parser.write(raw);
+    parser.write(this.raw);
     parser.end();
 
     return `There are ${count} <img> without alt attritube`;
   }
 
-  static linkShouldContainRelAttr(raw) {
+  static linkShouldContainRelAttr() {
     let count = 0;
     let parser = new htmlparser.Parser(
       {
@@ -152,12 +153,12 @@ class SEOChecker {
       },
       { decodeEntities: true }
     );
-    parser.write(raw);
+    parser.write(this.raw);
     parser.end();
     return `There are ${count} <a> without rel attritube`;
   }
 
-  static headShouldContainMetaAndTitle(raw) {
+  static headShouldContainMetaAndTitle() {
     let inHeader = false,
       hasTitle = false,
       result = '';
@@ -190,7 +191,7 @@ class SEOChecker {
       },
       { decodeEntities: true }
     );
-    parser.write(raw);
+    parser.write(this.raw);
     parser.end();
 
     if (hasTitle === false) {
@@ -207,7 +208,7 @@ class SEOChecker {
     return result;
   }
 
-  static bodySholdNotContainTooMoreStrong(raw) {
+  static bodySholdNotContainTooMoreStrong() {
     let count = 0,
       result = '';
     let parser = new htmlparser.Parser(
@@ -220,7 +221,7 @@ class SEOChecker {
       },
       { decodeEntities: true }
     );
-    parser.write(raw);
+    parser.write(this.raw);
     parser.end();
 
     if (count > this.maxStrongTags) {
@@ -230,7 +231,7 @@ class SEOChecker {
     return result;
   }
 
-  static bodySholdNotContainMoreThanOneH1(raw) {
+  static bodySholdNotContainMoreThanOneH1() {
     let count = 0,
       result = '';
     let parser = new htmlparser.Parser(
@@ -243,7 +244,7 @@ class SEOChecker {
       },
       { decodeEntities: true }
     );
-    parser.write(raw);
+    parser.write(this.raw);
     parser.end();
 
     if (count > 1) {
