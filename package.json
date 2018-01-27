@@ -1,5 +1,5 @@
 {
-  "name": "seo-checker",
+  "name": "soar-seo-checker",
   "version": "1.0.0",
   "description": "check some seo rules",
   "main": "index.js",
@@ -10,5 +10,11 @@
   "license": "MIT",
   "dependencies": {
     "htmlparser2": "^3.9.2"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git@SoarLin.github.com:SoarLin/seocheck.git"
+  },
+  "keywords": ["seo", "checker"]
 }
