@@ -1,11 +1,32 @@
 # 執行
 
-````
+```
 node example.js
-````
+```
 
-# 版本資訊
+# Usage
 
-### v0.1
+```
+var checker = new SEOChecker({
+  // html file
+  input: '/Users/soar/Sites/seocheck/index.html',
+  // can be a file, console
+  output: 'console',
+  maxStrongTags: 15,
+  rules: [
+    SEOChecker.imgShouldContainAltAttr,
+    SEOChecker.linkShouldContainRelAttr,
+    SEOChecker.bodySholdNotContainMoreThanOneH1,
+    SEOChecker.headShouldContainMetaAndTitle,
+    SEOChecker.bodySholdNotContainTooMoreStrong,
+    function() // user define check rule
+  ]
+});
 
-* 指定 HTML 檔案位置 & create instance
+checker.check();
+```
+
+# TODO
+
+* input can be readable stream
+* output can be writeable stream
