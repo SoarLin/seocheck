@@ -18,6 +18,6 @@ var checkAudioCount = function () {
 // add user define check rule
 seo_check.addCheckRule(checkAudioCount);
 
-var result = seo_check.check([6,1,4,2,3]);
+var result = seo_check.check([5,4,3,2,1]);
 
 console.log(result);

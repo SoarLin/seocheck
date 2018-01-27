@@ -8,5 +8,7 @@
   },
   "author": "Soar Lin <soar.lin@gmail.com>",
   "license": "MIT",
-  "dependencies": {}
+  "dependencies": {
+    "htmlparser2": "^3.9.2"
+  }
 }
