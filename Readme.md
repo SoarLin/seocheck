@@ -1,12 +1,5 @@
 # SEO Rules Checker
-
----
-
-## 測試
-
-```
-node example.js
-```
+----
 
 ## Usage
 
@@ -34,15 +27,15 @@ checker.check();
 ```
 
 ## Config options
-
-* **input**
+* __input__ 
   * path to your html file
-* **output**
+  * readable stream, don't need to call `check()` function, each `pipe()` or `push()` will auto check again
+* __output__
   * console : output check result on console
   * filepath : write check result to file
-* **maxStrongTags**
+* __maxStrongTags__
   * defind max `<strong>` count (defult:15)
-* **rules**
+* __rules__
   * choose check rules which used
   * can define custom check rule (input file loaded to `this.raw` parameter)
 
@@ -71,7 +64,25 @@ checker.check();
 
 * Detect if a HTML have more than one `<H1>` tag.
 
-## TODO
 
-* input can be readable stream
-* output can be writeable stream
+## 測試
+
+### input html file, output console
+
+````
+node test1.js
+````
+
+### input read stream(use `push()`), output console
+
+````
+node test2.js
+````
+
+### input read stream(use `pipe()`), output console
+
+````
+node test3.js
+````
+
+

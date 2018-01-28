@@ -13,6 +13,19 @@ class SEOChecker {
     this.inputType = this.detectInputType();
     this.outputType = this.detectOutputType();
     this.outputFile = undefined;
+    // for read stream pipe destination
+    this.writeStream = undefined;
+  }
+
+  get writer() {
+    if (this.writeStream === undefined) {
+      this.writeStream = this.createTempWriteStream();
+    }
+    return this.writeStream;
+  }
+
+  createTempWriteStream() {
+    return fs.createWriteStream('temp');
   }
 
   detectInputType() {
@@ -22,6 +35,40 @@ class SEOChecker {
     ) {
       return 'htmlfile';
     } else {
+      this.writeStream = this.createTempWriteStream();
+
+      // read stream use pipe() will trigger write stream 'pipe' event
+      this.writeStream.on('pipe', (chunk) => {
+        this.printOutput('============ Start check chunk(pipe) ============');
+        this.doCheck(chunk);
+        this.printOutput('============= End check chunk =============\r\n');
+      });
+
+      // read stream push() will trigger 'data' event
+      this.input.on('data', (chunk) => {
+        this.printOutput('============ Start check chunk(data) ============');
+        this.doCheck(chunk);
+        this.printOutput('============= End check chunk =============\r\n');
+
+        // if write is not finish, pause read stream
+        if (this.writeStream === undefined) {
+          this.writeStream = this.createTempWriteStream();
+        }
+        if (this.writeStream.write(chunk) === false) {
+          this.input.pause();
+        }
+      });
+
+      // if write finish, resume read stream
+      this.writeStream.on('drain', () => {
+        this.input.resume();
+      });
+      // if no data, close write stream
+      this.input.on('end', () => {
+        this.writeStream.end();
+        fs.unlink('temp');
+      });
+
       return 'stream';
     }
   }
@@ -131,9 +178,8 @@ class SEOChecker {
           console.error(err);
         });
     } else {
-      // input is stream
-      let data = this.input.read().toString();
-      this.doCheck(data.toString());
+      // input is readable stream
+      // use 'data' event to check chunk data
     }
   }
 
