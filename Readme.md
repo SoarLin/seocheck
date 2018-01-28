@@ -70,19 +70,25 @@ checker.check();
 ### input html file, output console
 
 ````
-node test1.js
+node test.inHTML.outConsole.js
+````
+
+### input html file, output file
+
+````
+node test.inHTML.outFile.js
 ````
 
 ### input read stream(use `push()`), output console
 
 ````
-node test2.js
+node test.inReadStream.push.outConsole.js
 ````
 
 ### input read stream(use `pipe()`), output console
 
 ````
-node test3.js
+node test.inReadStream.pipe.outConsole.js
 ````
 
 
