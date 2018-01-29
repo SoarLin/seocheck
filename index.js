@@ -37,33 +37,12 @@ class SEOChecker {
     } else {
       this.writeStream = this.createTempWriteStream();
 
-      // read stream use pipe() will trigger write stream 'pipe' event
-      this.writeStream.on('pipe', (chunk) => {
-        this.printOutput('============ Start check chunk(pipe) ============');
-        this.doCheck(chunk);
-        this.printOutput('============= End check chunk =============\r\n');
-      });
-
       // read stream push() will trigger 'data' event
       this.input.on('data', (chunk) => {
-        this.printOutput('============ Start check chunk(data) ============');
         this.doCheck(chunk);
-        this.printOutput('============= End check chunk =============\r\n');
-
-        // if write is not finish, pause read stream
-        if (this.writeStream === undefined) {
-          this.writeStream = this.createTempWriteStream();
-        }
-        if (this.writeStream.write(chunk) === false) {
-          this.input.pause();
-        }
       });
 
-      // if write finish, resume read stream
-      this.writeStream.on('drain', () => {
-        this.input.resume();
-      });
-      // if no data, close write stream
+      // if no data, close write stream and remove temp
       this.input.on('end', () => {
         this.writeStream.end();
         fs.unlink('temp');
@@ -102,8 +81,7 @@ class SEOChecker {
     return new Promise((resolve, reject) => {
       fs.unlink(filepath, (err) => {
         if (err) {
-          // no such file
-          // console.log(err);
+          // console.log('no such file');
         }
         resolve();
       });

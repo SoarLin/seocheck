@@ -23,16 +23,17 @@ var checker = new SEOChecker({
   ]
 });
 
-checker.check();
+checker.check();  // optional
 ```
 
 ## Config options
-* __input__ 
+* __input__
   * path to your html file
-  * readable stream, don't need to call `check()` function, each `pipe()` or `push()` will auto check again
+  * readable stream, don't need to call `check()` function, each `pipe()` will auto check again
 * __output__
   * console : output check result on console
   * filepath : write check result to file
+  * writeable stream: output check result to writeable stream
 * __maxStrongTags__
   * defind max `<strong>` count (defult:15)
 * __rules__
@@ -79,10 +80,10 @@ node test.inHTML.outConsole.js
 node test.inHTML.outFile.js
 ````
 
-### input read stream(use `push()`), output console
+### input html file, output write stream
 
 ````
-node test.inReadStream.push.outConsole.js
+node test.inHTML.outWriteStream.js
 ````
 
 ### input read stream(use `pipe()`), output console
@@ -91,4 +92,14 @@ node test.inReadStream.push.outConsole.js
 node test.inReadStream.pipe.outConsole.js
 ````
 
+### input read stream(use `pipe()`), output File
 
+````
+node test.inReadStream.pipe.outFile.js
+````
+
+### input read stream(use `pipe()`), output write stream
+
+````
+node test.inReadStream.pipe.outWriteStream.js
+````

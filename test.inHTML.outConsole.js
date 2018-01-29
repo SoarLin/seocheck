@@ -1,3 +1,8 @@
+/*
+ * Input: HTML File
+ * Output: Console
+ */
+
 const SEOChecker = require('./index');
 const htmlparser = require('htmlparser2');
 const fs = require('fs');

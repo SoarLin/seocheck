@@ -1,3 +1,8 @@
+/*
+ * Input: Readable stream
+ * Output: console
+ */
+
 const SEOChecker = require('./index');
 const fs = require('fs');
 
