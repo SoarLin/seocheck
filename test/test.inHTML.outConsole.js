@@ -3,13 +3,12 @@
  * Output: Console
  */
 
-const SEOChecker = require('./index');
+const SEOChecker = require('../lib/index');
 const htmlparser = require('htmlparser2');
-const fs = require('fs');
 
 const checker = new SEOChecker({
   // can be html file or readable stream
-  input: './index.html',
+  input: __dirname + '/index.html',
   // can be a file, write string, console
   output: 'console',
   maxStrongTags: 15,
@@ -20,11 +19,10 @@ const checker = new SEOChecker({
     SEOChecker.headShouldContainMetaAndTitle,
     SEOChecker.bodySholdNotContainTooMoreStrong,
     function() {
-      let count = 0,
-        result = '';
+      let count = 0;
       let parser = new htmlparser.Parser(
         {
-          onopentag: function(name, attritube) {
+          onopentagname: function(name) {
             if (name === 'audio') {
               count++;
             }

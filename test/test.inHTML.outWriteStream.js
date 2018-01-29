@@ -1,17 +1,17 @@
 /*
- * Input: Readable stream
- * Output: console
+ * Input: HTML File
+ * Output: Writeable stream
  */
 
-const SEOChecker = require('./index');
+const SEOChecker = require('../lib/index');
 const fs = require('fs');
 
-var readStream = fs.createReadStream('./index.html');
+var writeStream = fs.createWriteStream(__dirname + '/result.txt');
 const checker = new SEOChecker({
   // can be html file or readable stream
-  input: readStream,
+  input: __dirname + '/index.html',
   // can be a file, write string, console
-  output: 'console',
+  output: writeStream,
   maxStrongTags: 15,
   rules: [
     SEOChecker.imgShouldContainAltAttr,
@@ -22,4 +22,4 @@ const checker = new SEOChecker({
   ]
 });
 
-readStream.pipe(checker.writer);
+checker.check();
