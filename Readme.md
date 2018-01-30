@@ -1,13 +1,14 @@
 # SEO Rules Checker
-----
+
+---
 
 ## Usage
 
 ```
 var checker = new SEOChecker({
-  // html file
+  // html file, readable stream
   input: 'path/to/htmlfile',
-  // can be a file, console
+  // can be a file, console, writeable stream
   output: 'console',
   maxStrongTags: 15,
   rules: [
@@ -27,16 +28,17 @@ checker.check();  // optional
 ```
 
 ## Config options
-* __input__
+
+* **input**
   * path to your html file
   * readable stream, don't need to call `check()` function, each `pipe()` will auto check again
-* __output__
+* **output**
   * console : output check result on console
   * filepath : write check result to file
   * writeable stream: output check result to writeable stream
-* __maxStrongTags__
+* **maxStrongTags**
   * defind max `<strong>` count (defult:15)
-* __rules__
+* **rules**
   * choose check rules which used
   * can define custom check rule (input file loaded to `this.raw` parameter)
 
@@ -65,41 +67,40 @@ checker.check();  // optional
 
 * Detect if a HTML have more than one `<H1>` tag.
 
-
 ## 測試
 
 ### input html file, output console
 
-````
+```
 node test.inHTML.outConsole.js
-````
+```
 
 ### input html file, output file
 
-````
+```
 node test.inHTML.outFile.js
-````
+```
 
 ### input html file, output write stream
 
-````
+```
 node test.inHTML.outWriteStream.js
-````
+```
 
 ### input read stream(use `pipe()`), output console
 
-````
+```
 node test.inReadStream.pipe.outConsole.js
-````
+```
 
 ### input read stream(use `pipe()`), output File
 
-````
+```
 node test.inReadStream.pipe.outFile.js
-````
+```
 
 ### input read stream(use `pipe()`), output write stream
 
-````
+```
 node test.inReadStream.pipe.outWriteStream.js
-````
+```
