@@ -4,7 +4,7 @@ const assert = chai.assert;
 const SEOChecker = require('../lib/index');
 const captureStream = require('./captureStream');
 
-describe('input: HTML file, check property', function() {
+describe('input: HTML file', function() {
   var checker;
   beforeEach(function() {
     checker = new SEOChecker({
@@ -21,11 +21,11 @@ describe('input: HTML file, check property', function() {
 
   describe('SEOChecker property', function() {
     it('inputType should be "htmlfile"', function() {
-      assert(checker.inputType, 'htmlfile');
+      assert(checker.detectInputType(), 'htmlfile');
     });
 
     it('outputType should be "console"', function() {
-      assert(checker.outputType, 'console');
+      assert(checker.detectOutputType(), 'console');
     });
 
     it('outputFile should be undefined', function() {
@@ -44,6 +44,33 @@ describe('input: HTML file, check property', function() {
       checker.addRules(SEOChecker.imgShouldContainAltAttr);
       assert.equal(checker.rules.length, 1);
     });
+  });
+
+  describe('check HTML parser function', function() {
+    let imgHTML = '<img src="http://www.myfunnow.com/images/logo/logo.svg" alt="logo">';
+    let fiveStrong = '<strong>A1</strong><strong>A2</strong><strong>A3</strong><strong>A4</strong><strong>A5</strong>';
+
+    it('it should be one image tag', function() {
+      let result = checker.countTagAndAttr(imgHTML, 'img', 'alt');
+      assert.equal(result.tag, 1, 'is not image tag');
+    });
+
+    it('it should be one image tag with one alt attribute', function() {
+      let result = checker.countTagAndAttr(imgHTML, 'img', 'alt');
+      assert.equal(result.attr, 1, 'is not image tag');
+    });
+
+    it('it should be 5 <strong> tag', function() {
+      let result = checker.countTagAndAttr(fiveStrong, 'strong');
+      assert.equal(result.tag, 5, 'is not image tag');
+    });
+  });
+});
+
+/*
+describe('input/output exception test', function() {
+  it('input type is unacceptable', function() {
+    assert.throws(new SEOChecker, Error, 'Unacceptable input type');
   });
 });
 
@@ -74,8 +101,8 @@ describe('input: HTML file, output: console', function() {
 
     // assert.equal(hook.captured(), 'There are 4 <img> without alt attritube');
     // assert.match(hook.captured(), '/without alt attritube/');
-
-    console.log('hellow');
-    assert.equal(hook.captured(), 'hellow\n');
+    process.stdout.write('hellow');
+    assert.equal(hook.captured(), 'hellow');
   });
 });
+*/
