@@ -1,9 +1,10 @@
 // const assert = require('assert');
 const chai = require('chai');
 const assert = chai.assert;
+const fs = require('fs');
 const stream = require('stream');
 const SEOChecker = require('../lib/index');
-// const captureStream = require('./captureStream');
+const helpers = require('./helpers');
 
 describe('SEOChecker basic test', function() {
   var checker;
@@ -133,42 +134,81 @@ describe('SEOChecker basic test', function() {
   });
 });
 
-/*
-describe('input/output exception test', function() {
-  it('input type is unacceptable', function() {
-    assert.throws(new SEOChecker, Error, 'Unacceptable input type');
-  });
-});
-
 describe('input: HTML file, output: console', function() {
-  var checker, hook;
+  var checker;
   beforeEach(function() {
     checker = new SEOChecker({
       input: __dirname + '/index.html',
       output: 'console',
       maxStrongTags: 17,
-      rules: [SEOChecker.imgShouldContainAltAttr]
+      rules: []
     });
 
-    hook = new captureStream(process.stdout);
+    helpers.captureOutput();
   });
 
   afterEach(function() {
-    hook.unhook();
     checker = null;
+    helpers.restoreOutput();
   });
 
-  it('image should contain alt attribute', function() {
-    // return new Promise((resolve) => {
-    //   resolve(checker.check());
-    // }).then(()=>{
-    //   assert.equal(hook.captured(), 'There are 4 <img> without alt attritube');
-    // });
+  it('check rule: image should contain alt attribute', function(done) {
+    checker.addRules(SEOChecker.imgShouldContainAltAttr);
+    checker.check().then(()=>{
+      var output = helpers.getOutput();
+      assert.equal(output, 'There are 2 <img> without alt attritube\r\n');
+      helpers.restoreOutput();
+      done();
+    }).catch((err)=>{
+      assert.ifError(err);
+    });
+  });
 
-    // assert.equal(hook.captured(), 'There are 4 <img> without alt attritube');
-    // assert.match(hook.captured(), '/without alt attritube/');
-    process.stdout.write('hellow');
-    assert.equal(hook.captured(), 'hellow');
+  it('check rule: link should contain rel attribute', function(done) {
+    checker.addRules(SEOChecker.linkShouldContainRelAttr);
+    checker.check().then(()=>{
+      var output = helpers.getOutput();
+      assert.equal(output, 'There are 1 <a> without rel attritube\r\n');
+      helpers.restoreOutput();
+      done();
+    }).catch((err)=>{
+      assert.ifError(err);
+    });
+  });
+
+  it('check rule: head should contain meta and title', function(done) {
+    checker.addRules(SEOChecker.headShouldContainMetaAndTitle);
+    checker.check().then(()=>{
+      var output = helpers.getOutput();
+      assert.equal(output, 'This HTML without <meta name="descriptions"> tag\r\n');
+      helpers.restoreOutput();
+      done();
+    }).catch((err)=>{
+      assert.ifError(err);
+    });
+  });
+
+  it('check rule: body shold not contain too more strong', function(done) {
+    checker.addRules(SEOChecker.bodySholdNotContainTooMoreStrong);
+    checker.check().then(()=>{
+      var output = helpers.getOutput();
+      assert.equal(output, 'This HTML have more than 17 <strong> tag\r\n');
+      helpers.restoreOutput();
+      done();
+    }).catch((err)=>{
+      assert.ifError(err);
+    });
+  });
+
+  it('check rule: body shold not contain more than one H1', function(done) {
+    checker.addRules(SEOChecker.bodySholdNotContainMoreThanOneH1);
+    checker.check().then(()=>{
+      var output = helpers.getOutput();
+      assert.equal(output, 'This HTML have more than one <h1> tag\r\n');
+      helpers.restoreOutput();
+      done();
+    }).catch((err)=>{
+      assert.ifError(err);
+    });
   });
 });
-*/
