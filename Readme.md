@@ -4,7 +4,7 @@
 
 ## Usage
 
-```
+```javascript
 var checker = new SEOChecker({
   // html file, readable stream
   input: 'path/to/htmlfile',
@@ -44,32 +44,23 @@ checker.check();  // optional
 
 ## Check rules
 
-### imgShouldContainAltAttr
-
-* Detect if any `<img />` tag without alt attribute
-
-### linkShouldContainRelAttr
-
-* Detect if any `<a />` tag without rel attribute
-
-### headShouldContainMetaAndTitle
-
-* In `<head>` tag
-  * Detect if header doesn’t have `<title>` tag
-  * Detect if header doesn’t have `<meta name=“descriptions” ... />` tag
-  * Detect if header doesn’t have `<meta name=“keywords” ... />` tag
-
-### bodySholdNotContainTooMoreStrong
-
-* Detect if there’re more than 15 `<strong>` tag in HTML (15 is defined by user)
-
-### bodySholdNotContainMoreThanOneH1
-
-* Detect if a HTML have more than one `<H1>` tag.
+* **imgShouldContainAltAttr**
+  * Detect if any `<img />` tag without alt attribute
+* **linkShouldContainRelAttr**
+  * Detect if any `<a />` tag without rel attribute
+* **headShouldContainMetaAndTitle**
+  * In `<head>` tag
+    * Detect if header doesn’t have `<title>` tag
+    * Detect if header doesn’t have `<meta name=“descriptions” ... />` tag
+    * Detect if header doesn’t have `<meta name=“keywords” ... />` tag
+* **bodySholdNotContainTooMoreStrong**
+  * Detect if there’re more than 15 `<strong>` tag in HTML (15 is defined by user)
+* **bodySholdNotContainMoreThanOneH1**
+  * Detect if a HTML have more than one `<H1>` tag.
 
 ## Test
 
-````
+````javascript
 npm install -g mocha
 
 mocha test/test.js
@@ -77,38 +68,38 @@ mocha test/test.js
 
 ## Other test Samples
 
-### input html file, output console
 
-```
-node test/test.inHTML.outConsole.js
+* input html file, output console
+
+```javascript
+  node test/test.inHTML.outConsole.js
 ```
 
-### input html file, output file
+* input html file, output file
 
-```
+```javascript
 node test/test.inHTML.outFile.js
 ```
 
-### input html file, output write stream
+* input html file, output write stream
 
-```
+```javascript
 node test/test.inHTML.outWriteStream.js
 ```
 
-### input read stream(use `pipe()`), output console
+* input read stream(use `pipe()`), output console
 
-```
+```javascript
 node test/test.inReadStream.pipe.outConsole.js
 ```
+* input read stream(use `pipe()`), output File
 
-### input read stream(use `pipe()`), output File
-
-```
+```javascript
 node test/test.inReadStream.pipe.outFile.js
 ```
 
-### input read stream(use `pipe()`), output write stream
+* input read stream(use `pipe()`), output write stream
 
-```
+```javascript
 node test/test.inReadStream.pipe.outWriteStream.js
 ```
