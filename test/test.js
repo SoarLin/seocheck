@@ -214,6 +214,94 @@ describe('[Test] input: HTML file, output: console', function() {
   });
 });
 
+describe('[Test] input: HTML file, output: File', function() {
+  var checker, outputFilePath;
+  beforeEach(function() {
+    outputFilePath = __dirname + '/result.txt';
+    checker = new SEOChecker({
+      input: __dirname + '/index.html',
+      output: outputFilePath,
+      maxStrongTags: 15,
+      rules: []
+    });
+  });
+
+  afterEach(function() {
+    checker = null;
+    fs.unlink(outputFilePath);
+  });
+
+  it('check rule: image should contain alt attribute', function(done) {
+    checker.addRules(SEOChecker.imgShouldContainAltAttr);
+    checker.check().then(()=>{
+      fs.readFile(outputFilePath, (err, data) => {
+        if (err) throw err;
+        let output = data.toString();
+        assert.equal(output, 'There are 2 <img> without alt attritube\r\n');
+        done();
+      });
+    }).catch((err)=>{
+      assert.ifError(err);
+    });
+  });
+
+  it('check rule: link should contain rel attribute', function(done) {
+    checker.addRules(SEOChecker.linkShouldContainRelAttr);
+    checker.check().then(()=>{
+      fs.readFile(outputFilePath, (err, data) => {
+        if (err) throw err;
+        let output = data.toString();
+        assert.equal(output, 'There are 1 <a> without rel attritube\r\n');
+        done();
+      });
+    }).catch((err)=>{
+      assert.ifError(err);
+    });
+  });
+
+  it('check rule: head should contain meta and title', function(done) {
+    checker.addRules(SEOChecker.headShouldContainMetaAndTitle);
+    checker.check().then(()=>{
+      fs.readFile(outputFilePath, (err, data) => {
+        if (err) throw err;
+        let output = data.toString();
+        assert.equal(output, 'This HTML without <meta name="descriptions"> tag\r\n');
+        done();
+      });
+    }).catch((err)=>{
+      assert.ifError(err);
+    });
+  });
+
+  it('check rule: body shold not contain too more strong', function(done) {
+    checker.addRules(SEOChecker.bodySholdNotContainTooMoreStrong);
+    checker.check().then(()=>{
+      fs.readFile(outputFilePath, (err, data) => {
+        if (err) throw err;
+        let output = data.toString();
+        assert.equal(output, 'This HTML have more than 15 <strong> tag\r\n');
+        done();
+      });
+    }).catch((err)=>{
+      assert.ifError(err);
+    });
+  });
+
+  it('check rule: body shold not contain more than one H1', function(done) {
+    checker.addRules(SEOChecker.bodySholdNotContainMoreThanOneH1);
+    checker.check().then(()=>{
+      fs.readFile(outputFilePath, (err, data) => {
+        if (err) throw err;
+        let output = data.toString();
+        assert.equal(output, 'This HTML have more than one <h1> tag\r\n');
+        done();
+      });
+    }).catch((err)=>{
+      assert.ifError(err);
+    });
+  });
+});
+
 describe('[Test] input: HTML file, output: write stream', function() {
   var checker, memStream;
   beforeEach(function() {
@@ -357,6 +445,95 @@ describe('[Test] input: read stream, output: console', function() {
         var output = helpers.getOutput();
         assert.equal(output, 'This HTML have more than one <h1> tag\r\n');
         done();
+      });
+  });
+});
+
+describe('[Test] input: read stream, output: File', function() {
+  var checker, readStream, outputFilePath;
+  beforeEach(function() {
+    readStream = fs.createReadStream(__dirname + '/index.html');
+    outputFilePath = __dirname + '/result.txt';
+
+    checker = new SEOChecker({
+      input: readStream,
+      output: outputFilePath,
+      rules: []
+    });
+  });
+
+  afterEach(function() {
+    checker = null;
+    fs.unlink(outputFilePath);
+  });
+
+  it('check rule: image should contain alt attribute', function(done) {
+    checker.addRules(SEOChecker.imgShouldContainAltAttr);
+    readStream
+      .pipe(checker.writer)
+      .on('finish', function() {
+        fs.readFile(outputFilePath, (err, data) => {
+          if (err) throw err;
+          let output = data.toString();
+          assert.equal(output, 'There are 2 <img> without alt attritube\r\n');
+          done();
+        });
+      });
+  });
+
+  it('check rule: link should contain rel attribute', function(done) {
+    checker.addRules(SEOChecker.linkShouldContainRelAttr);
+    readStream
+      .pipe(checker.writer)
+      .on('finish', function() {
+        fs.readFile(outputFilePath, (err, data) => {
+          if (err) throw err;
+          let output = data.toString();
+          assert.equal(output, 'There are 1 <a> without rel attritube\r\n');
+          done();
+        });
+      });
+  });
+
+  it('check rule: head should contain meta and title', function(done) {
+    checker.addRules(SEOChecker.headShouldContainMetaAndTitle);
+    readStream
+      .pipe(checker.writer)
+      .on('finish', function() {
+        fs.readFile(outputFilePath, (err, data) => {
+          if (err) throw err;
+          let output = data.toString();
+          assert.equal(output, 'This HTML without <meta name="descriptions"> tag\r\n');
+          done();
+        });
+      });
+  });
+
+  it('check rule: body shold not contain too more strong', function(done) {
+    checker.addRules(SEOChecker.bodySholdNotContainTooMoreStrong);
+    readStream
+      .pipe(checker.writer)
+      .on('finish', function() {
+        fs.readFile(outputFilePath, (err, data) => {
+          if (err) throw err;
+          let output = data.toString();
+          assert.equal(output, 'This HTML have more than 15 <strong> tag\r\n');
+          done();
+        });
+      });
+  });
+
+  it('check rule: body shold not contain more than one H1', function(done) {
+    checker.addRules(SEOChecker.bodySholdNotContainMoreThanOneH1);
+    readStream
+      .pipe(checker.writer)
+      .on('finish', function() {
+        fs.readFile(outputFilePath, (err, data) => {
+          if (err) throw err;
+          let output = data.toString();
+          assert.equal(output, 'This HTML have more than one <h1> tag\r\n');
+          done();
+        });
       });
   });
 });
