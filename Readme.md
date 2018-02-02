@@ -67,40 +67,48 @@ checker.check();  // optional
 
 * Detect if a HTML have more than one `<H1>` tag.
 
-## 測試
+## Test
+
+````
+npm install -g mocha
+
+mocha test/test.js
+````
+
+## Other test Samples
 
 ### input html file, output console
 
 ```
-node test.inHTML.outConsole.js
+node test/test.inHTML.outConsole.js
 ```
 
 ### input html file, output file
 
 ```
-node test.inHTML.outFile.js
+node test/test.inHTML.outFile.js
 ```
 
 ### input html file, output write stream
 
 ```
-node test.inHTML.outWriteStream.js
+node test/test.inHTML.outWriteStream.js
 ```
 
 ### input read stream(use `pipe()`), output console
 
 ```
-node test.inReadStream.pipe.outConsole.js
+node test/test.inReadStream.pipe.outConsole.js
 ```
 
 ### input read stream(use `pipe()`), output File
 
 ```
-node test.inReadStream.pipe.outFile.js
+node test/test.inReadStream.pipe.outFile.js
 ```
 
 ### input read stream(use `pipe()`), output write stream
 
 ```
-node test.inReadStream.pipe.outWriteStream.js
+node test/test.inReadStream.pipe.outWriteStream.js
 ```

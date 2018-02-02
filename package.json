@@ -1,12 +1,12 @@
 {
   "name": "soar-seo-checker",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "check some seo rules",
   "main": "lib/index.js",
   "scripts": {
     "build": "gulp",
     "lint": "eslint lib test",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha test/test.js"
   },
   "author": "Soar Lin <soar.lin@gmail.com>",
   "license": "MIT",
@@ -21,7 +21,8 @@
     "gulp-babel": "^7.0.1",
     "gulp-concat": "^2.6.1",
     "gulp-rimraf": "^0.2.2",
-    "gulp-uglify": "^3.0.0"
+    "gulp-uglify": "^3.0.0",
+    "memorystream": "^0.3.1"
   },
   "repository": {
     "type": "git",
