@@ -60,11 +60,11 @@ checker.check();  // optional
 
 ## Test
 
-````javascript
+```javascript
 npm install -g mocha
 
 mocha test/test.js
-````
+```
 
 ## Other test Samples
 
@@ -72,34 +72,35 @@ mocha test/test.js
 * input html file, output console
 
 ```javascript
-  node test/test.inHTML.outConsole.js
+    node test/test.inHTML.outConsole.js
 ```
 
 * input html file, output file
 
 ```javascript
-node test/test.inHTML.outFile.js
+    node test/test.inHTML.outFile.js
 ```
 
 * input html file, output write stream
 
 ```javascript
-node test/test.inHTML.outWriteStream.js
+    node test/test.inHTML.outWriteStream.js
 ```
 
 * input read stream(use `pipe()`), output console
 
 ```javascript
-node test/test.inReadStream.pipe.outConsole.js
+    node test/test.inReadStream.pipe.outConsole.js
 ```
+
 * input read stream(use `pipe()`), output File
 
 ```javascript
-node test/test.inReadStream.pipe.outFile.js
+    node test/test.inReadStream.pipe.outFile.js
 ```
 
 * input read stream(use `pipe()`), output write stream
 
 ```javascript
-node test/test.inReadStream.pipe.outWriteStream.js
+    node test/test.inReadStream.pipe.outWriteStream.js
 ```
