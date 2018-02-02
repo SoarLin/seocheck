@@ -214,6 +214,78 @@ describe('[Test] input: HTML file, output: console', function() {
   });
 });
 
+describe('[Test] input: HTML file, output: write stream', function() {
+  var checker, memStream;
+  beforeEach(function() {
+    memStream = MemoryStream.createWriteStream();
+    checker = new SEOChecker({
+      input: __dirname + '/index.html',
+      output: memStream,
+      maxStrongTags: 17,
+      rules: []
+    });
+  });
+
+  afterEach(function() {
+    checker = null;
+  });
+
+  it('check rule: image should contain alt attribute', function(done) {
+    checker.addRules(SEOChecker.imgShouldContainAltAttr);
+    checker.check().then(()=>{
+      var output = memStream.toString();
+      assert.equal(output, 'There are 2 <img> without alt attritube\r\n');
+      done();
+    }).catch((err)=>{
+      assert.ifError(err);
+    });
+  });
+
+  it('check rule: link should contain rel attribute', function(done) {
+    checker.addRules(SEOChecker.linkShouldContainRelAttr);
+    checker.check().then(()=>{
+      var output = memStream.toString();
+      assert.equal(output, 'There are 1 <a> without rel attritube\r\n');
+      done();
+    }).catch((err)=>{
+      assert.ifError(err);
+    });
+  });
+
+  it('check rule: head should contain meta and title', function(done) {
+    checker.addRules(SEOChecker.headShouldContainMetaAndTitle);
+    checker.check().then(()=>{
+      var output = memStream.toString();
+      assert.equal(output, 'This HTML without <meta name="descriptions"> tag\r\n');
+      done();
+    }).catch((err)=>{
+      assert.ifError(err);
+    });
+  });
+
+  it('check rule: body shold not contain too more strong', function(done) {
+    checker.addRules(SEOChecker.bodySholdNotContainTooMoreStrong);
+    checker.check().then(()=>{
+      var output = memStream.toString();
+      assert.equal(output, 'This HTML have more than 17 <strong> tag\r\n');
+      done();
+    }).catch((err)=>{
+      assert.ifError(err);
+    });
+  });
+
+  it('check rule: body shold not contain more than one H1', function(done) {
+    checker.addRules(SEOChecker.bodySholdNotContainMoreThanOneH1);
+    checker.check().then(()=>{
+      var output = memStream.toString();
+      assert.equal(output, 'This HTML have more than one <h1> tag\r\n');
+      done();
+    }).catch((err)=>{
+      assert.ifError(err);
+    });
+  });
+});
+
 describe('[Test] input: read stream, output: console', function() {
   var checker, readStream;
   beforeEach(function() {
