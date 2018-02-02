@@ -7,7 +7,6 @@ const SEOChecker = require('../lib/index');
 const helpers = require('./helpers');
 const MemoryStream = require('memorystream');
 
-
 describe('SEOChecker basic test', function() {
   var checker;
   beforeEach(function() {
@@ -215,6 +214,81 @@ describe('[Test] input: HTML file, output: console', function() {
   });
 });
 
+describe('[Test] input: read stream, output: console', function() {
+  var checker, readStream;
+  beforeEach(function() {
+    readStream = fs.createReadStream(__dirname + '/index.html');
+
+    checker = new SEOChecker({
+      input: readStream,
+      output: 'console',
+      rules: []
+    });
+
+    helpers.captureOutput();
+  });
+
+  afterEach(function() {
+    checker = null;
+    helpers.restoreOutput();
+  });
+
+  it('check rule: image should contain alt attribute', function(done) {
+    checker.addRules(SEOChecker.imgShouldContainAltAttr);
+    readStream
+      .pipe(checker.writer)
+      .on('finish', function() {
+        var output = helpers.getOutput();
+        assert.equal(output, 'There are 2 <img> without alt attritube\r\n');
+        done();
+      });
+  });
+
+  it('check rule: link should contain rel attribute', function(done) {
+    checker.addRules(SEOChecker.linkShouldContainRelAttr);
+    readStream
+      .pipe(checker.writer)
+      .on('finish', function() {
+        var output = helpers.getOutput();
+        assert.equal(output, 'There are 1 <a> without rel attritube\r\n');
+        done();
+      });
+  });
+
+  it('check rule: head should contain meta and title', function(done) {
+    checker.addRules(SEOChecker.headShouldContainMetaAndTitle);
+    readStream
+      .pipe(checker.writer)
+      .on('finish', function() {
+        var output = helpers.getOutput();
+        assert.equal(output, 'This HTML without <meta name="descriptions"> tag\r\n');
+        done();
+      });
+  });
+
+  it('check rule: body shold not contain too more strong', function(done) {
+    checker.addRules(SEOChecker.bodySholdNotContainTooMoreStrong);
+    readStream
+      .pipe(checker.writer)
+      .on('finish', function() {
+        var output = helpers.getOutput();
+        assert.equal(output, 'This HTML have more than 15 <strong> tag\r\n');
+        done();
+      });
+  });
+
+  it('check rule: body shold not contain more than one H1', function(done) {
+    checker.addRules(SEOChecker.bodySholdNotContainMoreThanOneH1);
+    readStream
+      .pipe(checker.writer)
+      .on('finish', function() {
+        var output = helpers.getOutput();
+        assert.equal(output, 'This HTML have more than one <h1> tag\r\n');
+        done();
+      });
+  });
+});
+
 describe('[Test] input: read stream, output: write stream', function() {
   var checker, readStream, memStream;
   beforeEach(function() {
@@ -286,5 +360,4 @@ describe('[Test] input: read stream, output: write stream', function() {
         done();
       });
   });
-
 });
